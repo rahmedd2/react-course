@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>React Basics</title>
+    <style>
+        /* **************************** Practice 1 ***************
+            
+            .practice-button{
+                background-color: rgb(25,135,84);
+                border:none;
+                border-radius: 10px;
+                color:white;
+                font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+                height: 50px;
+                width:100px;
+
+            }
+            .practice-buttonOff{
+                background-color: rgb(220,53,69);
+                border:none;
+                border-radius: 10px;
+                color:white;
+                font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+                height: 50px;
+                width:100px;
+            } 
+        ***********************************************************/
+        
+        /****************** PROBLEM 2 *****************************
+        .button-icon{
+            background-color: rgb(0,123,255);
+            color:white;
+            border:none;
+            border-radius:10px;
+            padding: 10px 15px;
+            margin-right:8px;
+            margin-top:10px;
+            cursor:pointer;
+            transition: 0.3s ease;
+        }
+        .button-icon:hover{
+            background-color: rgb(37, 171, 228);
+        }
+        *************************************************************/
+
+
+
+    </style>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+    <script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+
+     /********************* PRACTICE 1 **************************
+      function ComponentButton({isButtonOn, setButton}){
+        const buttonContainer = React.useRef(null)
+
+        React.useEffect(()=>{
+            const containerElem = buttonContainer.current;
+            if(isButtonOn){
+                containerElem.className="practice-button"
+            }else{
+                containerElem.className="practice-buttonOff"
+            }
+        },[isButtonOn])
+        function buttonClicked(){
+             setButton(!isButtonOn);
+             console.log(isButtonOn)
+        }
+        return(
+            <div>
+                <button className="practice-button" onClick={buttonClicked} ref={buttonContainer}>{isButtonOn ? 'ON' : 'OFF' }</button>
+            </div>
+        )
+      }
+     
+      function App(){
+       const [isButtonOn, setButton] =React.useState(true);
+        return(
+         <>
+         <ComponentButton isButtonOn={isButtonOn} setButton={setButton}/>
+         </>
+       )
+      }
+      const container = document.querySelector('.js-container');
+      ReactDOM.createRoot(container).render(<App />);
+
+      **********************************************************/
+      /********************* PROBLEM 2 ******************************
+      function AccountMenu({password,setPassword,email,setEmail,visibility,setVisibility}){
+        const passwordContainer = React.useRef();
+
+        React.useEffect(()=>{
+          const containerElem=passwordContainer.current;
+          if(!visibility){
+            containerElem.type="password";
+          }else{
+            containerElem.type="text";
+          }
+        },[visibility])
+
+        function changedEmail(event){
+            setEmail(event.target.value);
+        }
+        function changedPassword(event){
+            setPassword(event.target.value);
+        }
+        function showOrHide(){
+            setVisibility(!visibility);
+            console.log(visibility);
+        }
+        return(
+            <>
+                <p>Hello, welcome to my website.</p>
+                <div>
+                    <input placeholder="Email" onChange={changedEmail} value={email}/>
+                </div>
+                <div>
+                <input placeholder="Password" onChange={changedPassword} value = {password}  type="text" ref={passwordContainer}/>
+                {password && <button onClick={showOrHide}>{visibility ? "Hide" : "Show"}</button>}
+                </div>
+                <button className="button-icon">Sign Up</button>
+                <button className="button-icon">Login</button>
+            </>
+        )
+      }
+      function App(){
+
+        const  [password,setPassword] = React.useState('');
+        const  [email, setEmail] = React.useState('');
+        const  [visibility, setVisibility] = React.useState(true);
+
+
+        return(
+         <AccountMenu 
+            password={password} setPassword = {setPassword} 
+            email = {email} setEmail = {setEmail}
+            visibility = {visibility} setVisibility = {setVisibility}    
+        />
+       )
+      }
+      const container = document.querySelector('.js-container');
+      ReactDOM.createRoot(container).render(<App />);
+    ***************************************************************/
+    
+    /***************** PROBLEM 3 **********************************
+    //  function DayTime(){
+    //     const timeContainer = React.useRef();
+    //     const [time, setTime] = React.useState(dayjs().format("HH:mm:ss"));
+    //     React.useEffect(()=>{
+    //       const containerElem=timeContainer.current;
+    //       if(containerElem){
+    //         setInterval(()=>{
+    //           setTime(dayjs().format("HH:mm:ss"));
+    //           console.log('run code');
+    //         },1000)
+    //       }
+    //     },[time])
+    //     return(
+    //         <p ref={timeContainer}>{time}</p>
+    //     )
+    //  }
+    //  function App(){
+
+
+    //     return(
+    //      <DayTime />
+    //    )
+    //   }
+
+    //   const container = document.querySelector('.js-container');
+    //   ReactDOM.createRoot(container).render(<App />);
+    ************************************************************/
+        function CounterApp({count,setCount}){
+
+            function increaseCount(){
+                count+=1;
+                setCount(count);
+                console.log(count);
+            }
+            function reset(){
+                setCount(0);
+            }
+            function autoClick(){
+                setInterval(()=>{
+                    increaseCount();
+                },1000);
+            }
+
+            return(
+                <div>
+                    <button onClick={increaseCount} ref={counterContainer}></button>
+                    <button onClick={reset}>Reset</button>
+                    <button onClick={autoClick}>Auto-Click</button>
+                </div>
+            )
+        }
+        function App(){
+        
+        const [count, setCount] = React.useState(0);
+         return(
+            <CounterApp count={count} setCount={setCount}/>
+         )
+      }
+
+      const container = document.querySelector('.js-container');
+      ReactDOM.createRoot(container).render(<App />);
+
+
+    </script>
+  </body>
+</html>
