@@ -19,11 +19,11 @@ export function HomePage() {
   const [cart, setCart] = useState([]);
   //using axios to fetch data
   useEffect(()=>{
-    axios.get("http://localhost:3000/api/products") //response that is sent back gives us the data we want using axios
+    axios.get("/api/products") //response that is sent back gives us the data we want using axios
     .then((response)=>{
        setProducts(response.data);
     })
-    axios.get("http://localhost:3000/api/cart-items")
+    axios.get("/api/cart-items")
     .then((response)=>{
       setCart(response.data);
     })
