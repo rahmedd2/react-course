@@ -1,5 +1,5 @@
 import './Orders.css'
-import { Header } from "../components/Header"
+import { Header } from "../../components/Header"
 
 export function Orders() {
 
