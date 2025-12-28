@@ -2,9 +2,11 @@ import "./Header.css"
 import  { Link } from "react-router"
 export function Header({cart}) {
     let quantity = 0;
-    cart.forEach((item)=>{
+    if(cart){
+        cart.forEach((item)=>{
         quantity+=item.quantity;
     })
+    }
     return (
         <>
             <div className="header">

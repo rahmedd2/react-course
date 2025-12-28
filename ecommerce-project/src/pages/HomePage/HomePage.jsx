@@ -1,10 +1,10 @@
 import "./HomePage.css"
 import { Header } from "../../components/Header"
-import { useEffect, useState } from "react"
 import { Product } from "../../components/Product.jsx"
 import axios from "axios"
+import {useState, useEffect} from "react"
 
-export function HomePage() {
+export function HomePage({ cart }) {
   // one way to fetch data from backend 
   // fetch(  //sends a request to the backend with the specified url 
   //   "http://localhost:3000/api/products"
@@ -16,18 +16,13 @@ export function HomePage() {
   //   });
 
   const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]);
-  //using axios to fetch data
-  useEffect(()=>{
-    axios.get("/api/products") //response that is sent back gives us the data we want using axios
-    .then((response)=>{
-       setProducts(response.data);
-    })
-    axios.get("/api/cart-items")
-    .then((response)=>{
-      setCart(response.data);
-    })
-  },[]);
+    //using axios to fetch data
+    useEffect(()=>{
+      axios.get("/api/products") //response that is sent back gives us the data we want using axios
+      .then((response)=>{
+         setProducts(response.data);
+      })
+    },[]);
 
   return (
     <>
