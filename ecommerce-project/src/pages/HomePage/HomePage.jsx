@@ -1,10 +1,10 @@
 import "./HomePage.css"
 import { Header } from "../../components/Header"
-import { Product } from "../../components/Product.jsx"
+import { ProductGrid } from "../../components/ProductGrid.jsx"
 import axios from "axios"
 import {useState, useEffect} from "react"
 
-export function HomePage({ cart }) {
+export function HomePage({ cart, loadCartData}) {
   // one way to fetch data from backend 
   // fetch(  //sends a request to the backend with the specified url 
   //   "http://localhost:3000/api/products"
@@ -18,10 +18,11 @@ export function HomePage({ cart }) {
   const [products, setProducts] = useState([]);
     //using axios to fetch data
     useEffect(()=>{
-      axios.get("/api/products") //response that is sent back gives us the data we want using axios
-      .then((response)=>{
-         setProducts(response.data);
-      })
+      const getProductData = async () => {
+        const response = await axios.get("/api/products") //response that is sent back gives us the data we want using axios
+        setProducts(response.data);
+      }
+      getProductData();
     },[]);
 
   return (
@@ -30,21 +31,8 @@ export function HomePage({ cart }) {
       <Header cart={cart} />
 
       <div className="home-page">
-        <div className="products-grid">
-          {products.map((product) => {
-            return (
-              <Product
-                key={product.id}
-                image={product.image}
-                name={product.name}
-                rating={product.rating}
-                priceCents={product.priceCents}
-                keywords={product.keywords}
-              />
-            )
-          })}
+          <ProductGrid products= {products} loadCartData={loadCartData} />
         </div>
-      </div>
     </>
   )
 }

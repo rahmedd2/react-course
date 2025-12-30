@@ -10,21 +10,24 @@ import {useState, useEffect} from "react"
 function App() {
     const [cart, setCart] = useState([]);
     //using axios to fetch data
-    useEffect(()=>{
-      axios.get("/api/cart-items?expand=product")
-      .then((response)=>{
+
+    //make a promise using async await
+     const loadCartData = async ()=>{
+        const response = await axios.get("/api/cart-items?expand=product")
         setCart(response.data);
-      })
+      }
+    useEffect(()=>{
+      loadCartData();
     },[]);
   
 
   return (
     <>
       <Routes>
-        <Route index /*the main page, u can also use:  path="/" */ element={<HomePage cart={cart} />} />
-        <Route path="/checkout" element={<Checkout cart={cart} />} />
+        <Route index /*the main page, u can also use:  path="/" */ element={<HomePage cart={cart} loadCartData = {loadCartData} />} />
+        <Route path="/checkout" element={<Checkout cart={cart} loadCartData= {loadCartData} />} />
         <Route path="/orders" element={<Orders cart={cart} />} />
-          <Route path="/tracking" element={<Tracking/>} />
+          <Route path="/tracking" element={<Tracking cart={cart}/>} />
       </Routes>
     </>
   )

@@ -2,21 +2,27 @@ import { useState, useEffect } from "react"
 import axios from "axios"
 import dayjs from "dayjs"
 
-export function CartItem({ product, quantity, deliveryOptionId}) {
+export function CartItem({ product, quantity, deliveryOptionId, loadCartData}) {
     const [deliveryOptions, setDeliveryOptions] = useState([]);
 
     useEffect(() => {
-        axios.get("/api/delivery-options?expand=estimatedDeliveryTime")
-            .then((response) => {
-                setDeliveryOptions(response.data);
-            })
+        const getDeliveryData = async ()=>{
+         const response = await axios.get("/api/delivery-options?expand=estimatedDeliveryTime")
+         setDeliveryOptions(response.data);
+
+        }
+        getDeliveryData();
     }, []);
 
-    
 
+    const deleteCartItem = async ()=> {
+        await axios.delete(`/api/cart-items/${product.id}`)
+        await loadCartData()
+    }
     const itemDeliveryOption =deliveryOptions.find((deliveryOption)=>{
         return deliveryOption.id === deliveryOptionId;
     })
+
     return (
         <>
             <div className="cart-item-container">
@@ -39,10 +45,10 @@ export function CartItem({ product, quantity, deliveryOptionId}) {
                             <span>
                                 Quantity: <span className="quantity-label">{quantity}</span>
                             </span>
-                            <span className="update-quantity-link link-primary">
+                            <span className="update-quantity-link link-primary" >
                                 Update
                             </span>
-                            <span className="delete-quantity-link link-primary">
+                            <span className="delete-quantity-link link-primary" onClick={deleteCartItem}>
                                 Delete
                             </span>
                         </div>
@@ -55,9 +61,18 @@ export function CartItem({ product, quantity, deliveryOptionId}) {
                         {deliveryOptions.map((deliveryOption) => {
                             let price = (deliveryOption.priceCents/100).toFixed(2);
                             let priceString = `$${price} - Shipping`;
+
+                             const updateDeliveryOption = async ()=>{
+                                await axios.put(`/api/cart-items/${product.id}`, {
+                                    deliveryOptionId: deliveryOption.id
+                                })
+                                await loadCartData();
+                            }
+
                             return (
-                                <div key = {deliveryOption.id} className="delivery-option">
+                                <div key = {deliveryOption.id} className="delivery-option" onClick={updateDeliveryOption}>
                                     <input type="radio" checked={deliveryOption.id === deliveryOptionId}
+                                        onChange = {()=> {}}
                                         className="delivery-option-input"
                                         name={`delivery-option-${product.id}`} />
                                     <div>
