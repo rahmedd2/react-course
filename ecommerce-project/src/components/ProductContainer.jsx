@@ -35,6 +35,7 @@ export function ProductContainer({product, loadCartData}){
                         <div className="product-container">
                         <div className="product-image-container">
                             <img className="product-image"
+                                data-testId= "product-image"
                                 src={product.image} />
                         </div>
 
