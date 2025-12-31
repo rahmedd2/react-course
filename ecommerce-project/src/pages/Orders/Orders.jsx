@@ -5,7 +5,7 @@ import { useState, useEffect} from "react"
 import { OrderContainer } from '../../components/OrderContainer'
 
 
-export function Orders({ cart }) {
+export function Orders({ cart, loadCartData }) {
     const [orders, setOrders] = useState([]);
 
     useEffect( () => {
@@ -28,7 +28,7 @@ export function Orders({ cart }) {
                     {orders.length > 0 &&
                         orders.map((order) => {
                             return (
-                                <OrderContainer key = {order.id} order={order} />
+                                <OrderContainer key = {order.id} order={order} loadCartData= {loadCartData} />
                             )
                         })}
                 </div>

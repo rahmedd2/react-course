@@ -1,9 +1,20 @@
 import axios from "axios"
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 export function ProductContainer({product, loadCartData}){
     const [quantity, setQuantity] = useState(1);
-    
+    const [added, setAdded] = useState(false);
+    const addedContainer = useRef();
+
+    const containerElem=addedContainer.current;
+    if(added){
+        containerElem.style.opacity=1;
+        setTimeout(()=>{
+            containerElem.style.opacity=0;
+    }, 2000)
+       setAdded(false);
+    }
+
     const addToCart = async ()=>{
          await axios.post('/api/cart-items', {
             productId: product.id,
@@ -11,7 +22,7 @@ export function ProductContainer({product, loadCartData}){
             deliveryOptionId: 1,
          })
         await loadCartData();
-        
+        setAdded(true);
     }
 
     const selectQuantity = (event)=>{
@@ -60,7 +71,7 @@ export function ProductContainer({product, loadCartData}){
 
                         <div className="product-spacer"></div>
 
-                        <div className="added-to-cart">
+                        <div className="added-to-cart" ref ={addedContainer}>
                             <img src="images/icons/checkmark.png" />
                             Added
                         </div>

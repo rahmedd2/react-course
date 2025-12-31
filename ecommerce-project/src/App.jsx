@@ -26,7 +26,7 @@ function App() {
       <Routes>
         <Route index /*the main page, u can also use:  path="/" */ element={<HomePage cart={cart} loadCartData = {loadCartData} />} />
         <Route path="/checkout" element={<Checkout cart={cart} loadCartData= {loadCartData} />} />
-        <Route path="/orders" element={<Orders cart={cart} />} />
+        <Route path="/orders" element={<Orders cart={cart} loadCartData= {loadCartData} />} />
           <Route path="/tracking" element={<Tracking cart={cart}/>} />
       </Routes>
     </>

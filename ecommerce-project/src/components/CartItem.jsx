@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef} from "react"
 import axios from "axios"
 import dayjs from "dayjs"
 
 export function CartItem({ product, quantity, deliveryOptionId, loadCartData}) {
     const [deliveryOptions, setDeliveryOptions] = useState([]);
+    const [updated, setUpdated] = useState(false);
+    const [itemQuantity, setItemQuantity] = useState('');
 
     useEffect(() => {
         const getDeliveryData = async ()=>{
@@ -14,11 +16,24 @@ export function CartItem({ product, quantity, deliveryOptionId, loadCartData}) {
         getDeliveryData();
     }, []);
 
+    const inputContainer = useRef();
 
     const deleteCartItem = async ()=> {
         await axios.delete(`/api/cart-items/${product.id}`)
         await loadCartData()
     }
+
+    const updateItemQuantity = async ()=>{
+        await axios.put(`/api/cart-items/${product.id}`, {
+            productId: product.id,
+            quantity: Number(itemQuantity),
+        })
+         await loadCartData()
+           setUpdated(false);
+           setItemQuantity('');
+
+    }
+    
     const itemDeliveryOption =deliveryOptions.find((deliveryOption)=>{
         return deliveryOption.id === deliveryOptionId;
     })
@@ -42,10 +57,34 @@ export function CartItem({ product, quantity, deliveryOptionId, loadCartData}) {
                             ${(product.priceCents / 100).toFixed(2)}
                         </div>
                         <div className="product-quantity">
+                            {updated ? (
+                            < span className="update-quantity-textbox" >
+                                <input type="text" 
+                                       value ={itemQuantity} 
+                                       ref={inputContainer} 
+                                       onChange = {(e)=>{
+                                         setItemQuantity(e.target.value);
+                                       }}
+                                       onKeyDown={ async (e)=>{
+                                         if(e.key === 'Enter'){
+                                            await updateItemQuantity();
+                                         }
+                                         if(e.key === 'Escape'){
+                                            setUpdated(false);
+                                            setItemQuantity('');
+                                         }
+                                       }}
+                                />
+                            </span>
+                            ) : (
                             <span>
                                 Quantity: <span className="quantity-label">{quantity}</span>
                             </span>
-                            <span className="update-quantity-link link-primary" >
+                            )
+                            }
+                            <span className="update-quantity-link link-primary" onClick={()=>{
+                                setUpdated(!updated);
+                            }} >
                                 Update
                             </span>
                             <span className="delete-quantity-link link-primary" onClick={deleteCartItem}>

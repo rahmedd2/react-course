@@ -1,6 +1,8 @@
 import { Fragment } from "react"
 import dayjs from "dayjs"
-export function OrderContainer({ order }){
+import axios from "axios"
+export function OrderContainer({ order, loadCartData }){
+
       return (
 
                                 <div key={order.id} className="order-container">
@@ -24,6 +26,15 @@ export function OrderContainer({ order }){
 
                                     <div className="order-details-grid">
                                         {order.products.map((orderProduct) => {
+                                             const addToCart = async ()=>{
+                                                await axios.post('/api/cart-items', {
+                                                    productId: orderProduct.product.id,
+                                                    quantity: 1,
+                                                    deliveryOptionId: 1,
+                                                })
+                                                await loadCartData();
+                                                
+                                            }
                                             return (
                                                 <Fragment key={orderProduct.product.id}>
                                                     <div className="product-image-container">
@@ -40,7 +51,7 @@ export function OrderContainer({ order }){
                                                         <div className="product-quantity">
                                                             Quantity: {orderProduct.quantity}
                                                         </div>
-                                                        <button className="buy-again-button button-primary">
+                                                        <button className="buy-again-button button-primary"  onClick={addToCart}>
                                                             <img className="buy-again-icon" src="images/icons/buy-again.png" />
                                                             <span className="buy-again-message">Add to Cart</span>
                                                         </button>
